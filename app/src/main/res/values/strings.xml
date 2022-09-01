@@ -2,6 +2,7 @@
     <string name="app_name">SampleCompose</string>
     <string name="product_name_placeholder">Product Name</string>
     <string name="product_creator_placeholder" >Creator Product</string>
+    <string name="api_key" >d5600a331be3446c945541a2df42697f</string>
     <string name="product_description_placeholder" >This is the story of a girl
 Who cried a river and drowned the whole world
 And while she looks so sad in photographs

@@ -4,13 +4,16 @@ import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.example.samplecompose.detail.DetailFragment
+import com.example.samplecompose.home.HomeFragment
 import com.example.samplecompose.ui.theme.SampleComposeTheme
 
 class MainActivity : ComponentActivity() {
@@ -18,27 +21,40 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             SampleComposeTheme {
-                // A surface container using the 'background' color from the theme
-//                Surface(
-//                    // Used to fill max size of screen
-//                    modifier = Modifier.fillMaxSize(),
-//                    color = MaterialTheme.colors.background
-//                ) {
-                    HomeFragment()
-//                }
+                    JetpackComposeAppScreen()
             }
         }
     }
 }
 
 
-
-
 @Composable
-fun Greeting(name: String) {
-    Text(
-        modifier = Modifier.fillMaxSize(),
-        text = "Hello $name!")
+fun JetpackComposeAppScreen() {
+    val navController = rememberNavController()
+    NavHost(
+        navController = navController,
+        startDestination = Route.Home.route,
+    ) {
+        composable(route = Route.Home.route) {
+            HomeFragment(onClickToDetailScreen = { gamesId ->
+                navController.navigate(
+                    Route.Detail.createRoute(gamesId)
+                )
+            })
+        }
+        composable(
+            route = Route.Detail.route,
+            arguments = listOf(
+                navArgument("gamesId"){
+                    type = NavType.IntType
+                }
+            )
+        ) { backStackEntry ->
+            val gamesId = backStackEntry.arguments?.getInt("gamesId")
+            requireNotNull(gamesId) { "gamesId parameter wasn't found. Please make sure it's set!" }
+            DetailFragment(id = gamesId)
+        }
+    }
 }
 
 @Preview(showBackground = true)
@@ -46,6 +62,6 @@ fun Greeting(name: String) {
 @Composable
 fun DefaultPreview() {
     SampleComposeTheme {
-        Greeting("Android")
+        JetpackComposeAppScreen()
     }
 }

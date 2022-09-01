@@ -1,4 +1,4 @@
-package com.example.samplecompose
+package com.example.samplecompose.detail
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -18,12 +18,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import coil.compose.rememberAsyncImagePainter
+import com.example.samplecompose.R
 import com.example.samplecompose.ui.theme.SampleComposeTheme
 import kotlinx.coroutines.NonDisposableHandle.parent
 
 @Composable
 fun ProductHeader(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    imageUrl: String = "",
+    name: String = "",
+    releaseDate: String = "",
 ) {
     ConstraintLayout(
         modifier = modifier
@@ -33,9 +38,13 @@ fun ProductHeader(
             nameText,
             titleText,
         ) = createRefs()
+        val imagePainter = rememberAsyncImagePainter(
+            model = imageUrl,
+            error = painterResource(id = R.drawable.ic_launcher_foreground),
+        )
         Image(
-            painter = painterResource(R.drawable.ic_launcher_foreground),
-            contentDescription = null,
+            painter = imagePainter,
+            contentDescription = name,
             modifier = Modifier
                 .size(96.dp)
                 .clip(CircleShape)
@@ -47,24 +56,24 @@ fun ProductHeader(
                 },
         )
         Text(
-            text = stringResource(id = R.string.product_name_placeholder),
+            text = name,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier
-                .constrainAs(nameText){
+                .constrainAs(nameText) {
                     start.linkTo(photoAvatar.end, 16.dp)
                     top.linkTo(parent.top)
                 }
         )
         Text(
-            text = stringResource(id = R.string.product_creator_placeholder),
+            text = releaseDate,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             fontSize = 18.sp,
             fontWeight = FontWeight.Medium,
-            modifier = Modifier.constrainAs(titleText){
+            modifier = Modifier.constrainAs(titleText) {
                 start.linkTo(photoAvatar.end, 16.dp)
                 top.linkTo(nameText.bottom, 4.dp)
             }
